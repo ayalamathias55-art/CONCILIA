@@ -1,0 +1,27 @@
+﻿CONCILIA 1.2 - Conciliación bancaria
+=====================================
+
+CÓMO USARLO
+1. Descomprimí esta carpeta donde quieras (Escritorio, pendrive, carpeta de red).
+2. Abrí Concilia.exe. No necesita instalación ni internet.
+3. Cargá el extracto del banco (izquierda) y el libro mayor de la cuenta (derecha).
+   Acepta Excel (.xlsx, .xls), CSV y PDF con texto seleccionable.
+4. Revisá los pendientes, conciliá a mano los casos especiales y exportá a Excel.
+
+En la carpeta "Ejemplos" hay dos archivos para probar.
+
+PRIMERA VEZ QUE LO ABRÍS
+Windows puede mostrar "Windows protegió su PC" porque el programa no tiene firma
+digital. Hacé clic en "Más información" y luego en "Ejecutar de todas formas".
+
+REQUISITOS
+- Windows 10 u 11 (64 bits).
+- Microsoft Edge WebView2 Runtime. Ya viene en Windows 10/11 actualizados.
+  Si falta, Concilia te avisa y te indica dónde descargarlo gratis:
+  https://go.microsoft.com/fwlink/p/?LinkId=2124703
+
+PRIVACIDAD
+Los archivos se procesan en tu computadora. Concilia no envía datos a internet.
+Guarda solo tus preferencias (tolerancias) en %LOCALAPPDATA%\Concilia.
+
+Code100

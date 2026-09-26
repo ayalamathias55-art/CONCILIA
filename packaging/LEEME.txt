@@ -1,4 +1,4 @@
-﻿CONCILIA {{VERSION}} - Conciliación bancaria
+CONCILIA {{VERSION}} - Conciliación bancaria
 =====================================
 
 CÓMO USARLO
@@ -6,7 +6,9 @@ CÓMO USARLO
 2. Abrí Concilia.exe. No necesita instalación ni internet.
 3. Cargá el extracto del banco (izquierda) y el libro mayor de la cuenta (derecha).
    Acepta Excel (.xlsx, .xls), CSV y PDF con texto seleccionable.
-4. Revisá los pendientes, conciliá a mano los casos especiales y exportá a Excel.
+4. Revisá los pendientes y las sugerencias, y exportá a Excel.
+5. Tocá Guardar para dejarla en el historial; el mes que viene podés traer
+   sus pendientes con "Traer del historial".
 
 En la carpeta "Ejemplos" hay dos archivos para probar.
 
@@ -22,7 +24,11 @@ REQUISITOS
 
 PRIVACIDAD
 Los archivos se procesan en tu computadora. Concilia no envía datos a internet.
-Guarda solo tus preferencias (tolerancias) en %LOCALAPPDATA%\Concilia.
+El historial y las preferencias se guardan en %LOCALAPPDATA%\Concilia.
+Solo se conecta a internet para avisar si hay una versión nueva.
+
+ACTUALIZAR
+Descomprimí la versión nueva y reemplazá Concilia.exe. El historial se mantiene.
 
 Proyecto gratuito de Mathias Ayala. Prohibida su venta.
 https://github.com/ayalamathias55-art/CONCILIA

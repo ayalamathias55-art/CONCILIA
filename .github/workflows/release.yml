@@ -1,0 +1,67 @@
+name: Compilar y publicar Concilia
+
+# Se ejecuta al publicar un Release en GitHub (adjunta el .zip portable al release)
+# o manualmente desde la pestaña Actions (deja el .zip como artefacto descargable).
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows-portable:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Definir versión
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            V="${GITHUB_REF_NAME#v}"
+          else
+            V="0.0.0-dev"
+          fi
+          echo "VERSION=$V" >> "$GITHUB_ENV"
+          echo "Versión: $V"
+
+      - name: Generar la interfaz offline (web/index.html)
+        run: python3 scripts/build_web.py
+
+      - name: Recursos de Windows (ícono, manifiesto y versión)
+        run: |
+          go install github.com/tc-hib/go-winres@v0.3.3
+          WV=$(echo "$VERSION" | sed -E 's/[^0-9.].*$//; s/^$/0.0.0/')
+          "$(go env GOPATH)/bin/go-winres" make --arch amd64 --product-version "$WV" --file-version "$WV"
+
+      - name: Compilar Concilia.exe
+        run: GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -ldflags "-H windowsgui -s -w" -o Concilia.exe .
+
+      - name: Armar el paquete portable
+        run: |
+          mkdir -p dist/Concilia/Ejemplos
+          cp Concilia.exe dist/Concilia/
+          cp [eE]jemplos/*.xlsx dist/Concilia/Ejemplos/
+          sed "s/{{VERSION}}/$VERSION/" packaging/LEEME.txt > dist/Concilia/LEEME.txt
+          cp LICENSE dist/Concilia/LICENCIA.txt
+          cd dist && zip -r9 "Concilia_portable_v${VERSION}.zip" Concilia
+
+      - name: Adjuntar al release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/Concilia_portable_v*.zip
+
+      - name: Guardar como artefacto (ejecución manual)
+        if: github.event_name != 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Concilia_portable_v${{ env.VERSION }}
+          path: dist/Concilia_portable_v*.zip

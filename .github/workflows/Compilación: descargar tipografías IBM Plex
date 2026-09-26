@@ -32,6 +32,9 @@ jobs:
           echo "VERSION=$V" >> "$GITHUB_ENV"
           echo "Versión: $V"
 
+      - name: Descargar tipografías (IBM Plex)
+        run: python3 scripts/fetch_fonts.py
+
       - name: Generar la interfaz offline (web/index.html)
         run: python3 scripts/build_web.py
 

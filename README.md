@@ -19,7 +19,14 @@ Compara el extracto del banco con el libro mayor, empareja los movimientos y arm
 - **Empareja los movimientos** por monto y fecha, con una tolerancia de días configurable. Cuando hay varios candidatos, prefiere la fecha más cercana, el mismo número de cheque o transferencia y la descripción más parecida.
 - **Revisión manual:** en la pestaña Pendientes marcás uno o varios movimientos de cada lado y los conciliás juntos. Sirve, por ejemplo, para un depósito que agrupa varios cobros.
 - **Estado de conciliación:** depósitos en tránsito, cheques pendientes, créditos y débitos del banco no registrados, saldos ajustados y diferencia.
-- **Informe en Excel** con resumen y líneas de firma, hojas de pendientes y conciliados con formato, filtros y totales. Queda listo para imprimir en A4.
+- **Sugerencias inteligentes:** detecta depósitos que agrupan varios cobros, movimientos con el mismo importe pero fechas lejanas y posibles errores de carga (números invertidos o un dígito distinto). Se aceptan con un clic; si los importes difieren, se concilian con ajuste.
+- **Asientos de ajuste:** arma la lista de asientos para registrar en contabilidad (comisiones, intereses, impuestos del banco no registrados y correcciones), lista para copiar.
+- **Historial de conciliaciones:** cada conciliación guardada queda registrada con su resultado. Se puede volver a abrir, exportar de nuevo o respaldar en un archivo.
+- **Pendientes del mes anterior:** trae desde el historial los cheques sin cobrar y depósitos en tránsito del mes pasado, y los cruza solos con el extracto nuevo.
+- **Informe en Excel** con resumen y líneas de firma, hojas de pendientes, conciliados y asientos de ajuste, con formato, filtros y totales. Queda listo para imprimir en A4.
+- **Modo claro, oscuro o automático**, y aviso cuando hay una versión nueva.
+
+![Historial de conciliaciones en modo oscuro](docs/captura-historial.png)
 
 ![Informe exportado](docs/informe-resumen.png)
 
@@ -61,15 +68,20 @@ Si alguna columna no se detecta bien, se corrige una vez en **Columnas y vista p
 
 Probado con hasta **100.000 movimientos por lado**. Con 50.000, la carga y el emparejamiento tardan unos 3 segundos y el informe en Excel unos 5.
 
+## Actualizar
+
+Cuando hay una versión nueva, Concilia muestra un aviso con el botón **Descargar**. Descomprimí el zip nuevo y reemplazá `Concilia.exe`: el historial y las preferencias se mantienen.
+
 ## Privacidad
 
-Los archivos se procesan en tu computadora. Concilia no envía datos a internet ni tiene servidores. Solo guarda tus preferencias (tolerancias, datos del informe y configuraciones de columnas) en `%LOCALAPPDATA%\Concilia`.
+Los archivos se procesan en tu computadora. Concilia no envía tus datos a internet ni tiene servidores; solo consulta GitHub para saber si hay una versión nueva. El historial y las preferencias (tolerancias, datos del informe y configuraciones de columnas) se guardan en `%LOCALAPPDATA%\Concilia`.
 
 ## Compilar desde el código
 
 El programa es una interfaz web (`src/concilia.html`) dentro de una ventana nativa escrita en Go con WebView2.
 
 ```bash
+python3 scripts/fetch_fonts.py            # descarga las tipografías (requiere Node/npm)
 python3 scripts/build_web.py              # genera web/index.html (versión offline)
 go install github.com/tc-hib/go-winres@v0.3.3
 go-winres make --arch amd64               # ícono y datos del .exe
@@ -79,10 +91,11 @@ GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -ldflags "-H windowsg
 Se puede compilar desde Windows, Linux o macOS. Cada vez que se publica un **Release** en GitHub, la acción `.github/workflows/release.yml` compila el `.exe` y adjunta el zip portable automáticamente.
 
 ```
-src/concilia.html     interfaz y lógica de conciliación
+src/concilia.html     interfaz, conciliación, sugerencias e historial
+scripts/fetch_fonts.py descarga las tipografías IBM Plex a web/fonts
 scripts/build_web.py  arma la versión offline en web/
 web/                  interfaz empaquetada, librerías y tipografías
-main.go               ventana de Windows, guardado de archivos
+main.go               ventana de Windows, guardado de archivos e historial
 winres/               ícono y datos de versión del .exe
 packaging/            LEEME.txt que va dentro del zip
 ejemplos/             archivos de prueba
